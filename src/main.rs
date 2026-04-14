@@ -2,9 +2,8 @@ use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 use nix::sys::signal::{self, Signal};
 use nix::unistd::Pid;
-use procfs::process::Process;
 use std::collections::HashMap;
-use std::net::{TcpListener, ToSocketAddrs};
+use std::net::TcpListener;
 use std::str::FromStr;
 
 #[derive(Parser)]
@@ -61,7 +60,7 @@ fn get_port_owner(port: u16) -> Result<Option<(i32, String)>> {
 
         if let Ok(fds) = process.fd() {
             for fd in fds {
-                if let Ok(procfs::process::FDTarget::Socket(inode)) = fd?.target {
+                if let procfs::process::FDTarget::Socket(inode) = fd?.target {
                     if inodes.contains_key(&inode) {
                         let name = process.stat()?.comm;
                         return Ok(Some((process.pid, name)));
@@ -95,7 +94,7 @@ fn list_ports() -> Result<()> {
 
         if let Ok(fds) = process.fd() {
             for fd in fds {
-                if let Ok(procfs::process::FDTarget::Socket(inode)) = fd?.target {
+                if let procfs::process::FDTarget::Socket(inode) = fd?.target {
                     if let Some(port) = listening.get(&inode) {
                         let name = process.stat()?.comm;
                         println!("{:<10} {:<10} {:<15} {}", port, process.pid, name, inode);
