@@ -1,0 +1,12 @@
+[package]
+name = "port_cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
+anyhow = "1.0"
+procfs = "0.16"
+nix = { version = "0.27", features = ["process", "signal", "term"] }
+libc = "0.2"
+regex = "1.10"
